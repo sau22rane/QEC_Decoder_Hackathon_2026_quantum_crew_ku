@@ -1,3 +1,18 @@
+# Team quantum_crew_ku: exact maximum-likelihood decoding of the [[18,4,4]] qLDPC code
+
+Our entry to the **QEC Decoder Hackathon, November 2026** (NVIDIA, Riverlane, DTU Physics, NQCP and QMATH). The task: read the 70 detector bits of each shot of a `[[18,4,4]]` qLDPC memory experiment under SI1000 circuit-level noise, and predict the 4 logical observable flips.
+
+**Result:** logical error rate **0.0337** on the Kaggle public board (0.0339 on 2 × 100k local shots; predicting all zeros gives 0.288).
+
+**How it works** (details in [`final_submission/`](final_submission/)):
+- **Exact maximum-likelihood decoder.** Every error mechanism touches detectors in at most two adjacent time layers, so P(syndrome, logical class) is an exact chain of five lookup tables on 14-bit indices, built from the circuit with Walsh–Hadamard transforms. No beam, truncation or training data; decoded on the GPU with PyTorch, with float64 rechecks near the decision boundary.
+- **Earlier baseline:** degenerate BP-OSD written from scratch in NumPy + Numba (layered min-sum BP + OSD-CS), LER 0.0371. Summing probability per logical class instead of trusting the single most likely error gave the largest single gain (−6 %).
+- Experiments, benchmarks and findings are in [`team/`](team/) ([`FINDINGS.md`](team/FINDINGS.md)).
+
+---
+
+*Below: the organisers' original README for the hackathon.*
+
 # QEC decoder hackathon, November 2026: build your own decoder
 
 This repository holds the tools for the QEC decoder hackathon. The competition itself runs on Kaggle (invite only); the link to the competition will be added here later. On Kaggle you download the data, submit predictions and follow the leaderboard. Where this README and the Kaggle pages differ, the Kaggle pages count.
